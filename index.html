@@ -65,6 +65,47 @@
             font-weight: 600;
         }
 
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .tab-btn {
+            background: rgba(28, 28, 30, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #8e8e93;
+            border: 1px solid rgba(139, 101, 60, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: rgba(30, 58, 138, 0.6);
+            color: #ffffff;
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .tab-btn:hover {
+            background: rgba(28, 28, 30, 0.8);
+            border-color: rgba(139, 101, 60, 0.5);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .date-selector {
             display: flex;
             align-items: center;
@@ -305,6 +346,107 @@
             align-items: center;
         }
 
+        .overview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .overview-table th,
+        .overview-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(139, 101, 60, 0.2);
+        }
+
+        .overview-table th {
+            color: #8e8e93;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .overview-table td {
+            color: #ffffff;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #2c2c2e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4c7fba;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.warning {
+            background: #f39c12;
+        }
+
+        .progress-fill.danger {
+            background: #e74c3c;
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .day-card {
+            background: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 101, 60, 0.4);
+            text-align: center;
+        }
+
+        .day-card h3 {
+            color: #ffffff;
+            font-size: 1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .day-card .day-date {
+            color: #8e8e93;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .day-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.85em;
+        }
+
+        .day-summary-item {
+            display: flex;
+            justify-content: space-between;
+            color: #8e8e93;
+        }
+
+        .day-summary-value {
+            color: #ffffff;
+        }
+
+        @media (max-width: 968px) {
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 968px) {
             h1 {
                 font-size: 1.3em;
@@ -354,6 +496,24 @@
             .category-card {
                 padding: 15px;
             }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                font-size: 0.85em;
+                padding: 8px 15px;
+            }
+
+            .overview-table {
+                font-size: 0.85em;
+            }
+
+            .overview-table th,
+            .overview-table td {
+                padding: 8px;
+            }
         }
     </style>
 </head>
@@ -361,20 +521,29 @@
     <div class="container">
         <header>
             <h1>KMD's foodtracker</h1>
-            <div class="date-selector">
-                <button class="date-nav-btn" onclick="changeDay(-1)">‹</button>
-                <div class="date-display" id="dateDisplay"></div>
-                <button class="date-nav-btn" onclick="changeDay(1)">›</button>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('dagboek')">Dagboek</button>
+                <button class="tab-btn" onclick="switchTab('overzicht')">Overzicht</button>
+                <button class="tab-btn" onclick="switchTab('week')">Weekoverzicht</button>
             </div>
         </header>
 
-        <div class="add-form-section">
+        <div id="dagboek" class="tab-content active">
+            <div style="background: rgba(28, 28, 30, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(139, 101, 60, 0.3); padding: 15px 20px;">
+                <div class="date-selector">
+                    <button class="date-nav-btn" onclick="changeDay(-1)">‹</button>
+                    <div class="date-display" id="dateDisplay"></div>
+                    <button class="date-nav-btn" onclick="changeDay(1)">›</button>
+                </div>
+            </div>
+
+            <div class="add-form-section">
             <h2>Voeg Eten Toe</h2>
             <form onsubmit="addFood(event)">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="category">Categorie:</label>
-                        <select id="category" required>
+                        <select id="category" required onchange="updateUnitLabel()">
                             <option value="">-- Selecteer --</option>
                             <option value="groente">Groente</option>
                             <option value="fruit">Fruit</option>
@@ -384,6 +553,7 @@
                             <option value="zuivel">Zuivel</option>
                             <option value="kaas">Kaas</option>
                             <option value="vet">Vet</option>
+                            <option value="vocht">Vocht</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -391,7 +561,7 @@
                         <input type="text" id="productName" placeholder="bijv. spinazie" required>
                     </div>
                     <div class="form-group">
-                        <label for="grams">Gram:</label>
+                        <label for="grams" id="amountLabel">Gram:</label>
                         <input type="number" id="grams" min="1" placeholder="100" required>
                     </div>
                 </div>
@@ -399,12 +569,36 @@
             </form>
         </div>
 
-        <div class="categories-grid" id="categoriesGrid"></div>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
 
-        <div class="chart-section">
-            <h2>Dagelijks Overzicht - Alle Categorieën</h2>
-            <div class="chart-container">
-                <canvas id="nutritionChart"></canvas>
+        <div id="overzicht" class="tab-content">
+            <div class="chart-section">
+                <h2>Dagelijks Overzicht - Tabel</h2>
+                <table class="overview-table" id="overviewTable">
+                    <thead>
+                        <tr>
+                            <th>Categorie</th>
+                            <th>Gegeten</th>
+                            <th>Doel</th>
+                            <th>Voortgang</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overviewTableBody">
+                    </tbody>
+                </table>
+
+                <h2>Dagelijks Overzicht - Grafiek</h2>
+                <div class="chart-container">
+                    <canvas id="nutritionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="week" class="tab-content">
+            <div class="chart-section">
+                <h2>Weekoverzicht (Ma - Vr)</h2>
+                <div class="week-grid" id="weekGrid"></div>
             </div>
         </div>
     </div>
@@ -412,14 +606,15 @@
     <script>
         // Dagelijkse limieten
         const GOALS = {
-            groente: { name: 'Groente', max: 250, color: '#27ae60' },
-            fruit: { name: 'Fruit', max: 300, color: '#e74c3c' },
-            koolhydraten: { name: 'Koolhydraten', max: 495, color: '#f39c12' },
-            vlees: { name: 'Vlees', max: 100, color: '#e67e22' },
-            noten: { name: 'Ongezouten noten', max: 25, color: '#8e44ad' },
-            zuivel: { name: 'Zuivelproducten', max: 450, color: '#3498db' },
-            kaas: { name: 'Kaas', max: 40, color: '#f1c40f' },
-            vet: { name: 'Bereidingsvet', max: 15, color: '#95a5a6' }
+            groente: { name: 'Groente', max: 250, color: '#27ae60', unit: 'g' },
+            fruit: { name: 'Fruit', max: 300, color: '#e74c3c', unit: 'g' },
+            koolhydraten: { name: 'Koolhydraten', max: 495, color: '#f39c12', unit: 'g' },
+            vlees: { name: 'Vlees', max: 100, color: '#e67e22', unit: 'g' },
+            noten: { name: 'Ongezouten noten', max: 25, color: '#8e44ad', unit: 'g' },
+            zuivel: { name: 'Zuivelproducten', max: 450, color: '#3498db', unit: 'g' },
+            kaas: { name: 'Kaas', max: 40, color: '#f1c40f', unit: 'g' },
+            vet: { name: 'Bereidingsvet', max: 15, color: '#95a5a6', unit: 'g' },
+            vocht: { name: 'Vocht', max: 2000, color: '#00bcd4', unit: 'ml' }
         };
 
         let overviewChart = null;
@@ -432,6 +627,50 @@
             setupDatePicker();
             loadData();
             updateDisplay();
+            updateOverviewTable();
+            updateWeekOverview();
+        }
+
+        // Switch tussen tabs
+        function switchTab(tabName) {
+            // Verberg alle tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Verwijder active class van alle tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Toon geselecteerde tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activeer juiste button
+            event.target.classList.add('active');
+            
+            // Update displays als nodig
+            if (tabName === 'overzicht') {
+                updateOverviewTable();
+                updateChart();
+            } else if (tabName === 'week') {
+                updateWeekOverview();
+            }
+        }
+
+        // Update unit label op basis van categorie
+        function updateUnitLabel() {
+            const category = document.getElementById('category').value;
+            const label = document.getElementById('amountLabel');
+            const input = document.getElementById('grams');
+            
+            if (category === 'vocht') {
+                label.textContent = 'Milliliter:';
+                input.placeholder = '250';
+            } else {
+                label.textContent = 'Gram:';
+                input.placeholder = '100';
+            }
         }
 
         // Get vandaag als string (YYYY-MM-DD)
@@ -544,6 +783,90 @@
         function updateDisplay() {
             updateCategoriesGrid();
             updateChart();
+            updateOverviewTable();
+            updateWeekOverview();
+        }
+
+        // Update overzichtstabel
+        function updateOverviewTable() {
+            const data = getData();
+            const tbody = document.getElementById('overviewTableBody');
+            tbody.innerHTML = '';
+
+            Object.keys(GOALS).forEach(key => {
+                const goal = GOALS[key];
+                const current = data[key] || 0;
+                const percentage = (current / goal.max * 100);
+                
+                let progressClass = '';
+                if (percentage > 110) progressClass = 'danger';
+                else if (percentage > 100) progressClass = 'warning';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${goal.name}</td>
+                    <td>${current}${goal.unit}</td>
+                    <td>${goal.max}${goal.unit}</td>
+                    <td>
+                        <div>${percentage.toFixed(1)}%</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${progressClass}" style="width: ${Math.min(percentage, 100)}%"></div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update weekoverzicht
+        function updateWeekOverview() {
+            const grid = document.getElementById('weekGrid');
+            grid.innerHTML = '';
+            
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // 0 = zondag, 1 = maandag, etc.
+            
+            // Bereken maandag van deze week
+            const monday = new Date(today);
+            const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Als zondag, ga 6 dagen terug
+            monday.setDate(today.getDate() + diff);
+            
+            // Toon ma t/m vr
+            for (let i = 0; i < 5; i++) {
+                const date = new Date(monday);
+                date.setDate(monday.getDate() + i);
+                const dateString = formatDateToString(date);
+                
+                const allData = getAllData();
+                const dayData = allData[dateString] || {};
+                
+                const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag'];
+                
+                const card = document.createElement('div');
+                card.className = 'day-card';
+                
+                let summaryHTML = '<div class="day-summary">';
+                Object.keys(GOALS).forEach(key => {
+                    const goal = GOALS[key];
+                    const current = dayData[key] || 0;
+                    const percentage = (current / goal.max * 100).toFixed(0);
+                    summaryHTML += `
+                        <div class="day-summary-item">
+                            <span>${goal.name}:</span>
+                            <span class="day-summary-value">${percentage}%</span>
+                        </div>
+                    `;
+                });
+                summaryHTML += '</div>';
+                
+                card.innerHTML = `
+                    <h3>${dayNames[i]}</h3>
+                    <div class="day-date">${date.getDate()}/${date.getMonth() + 1}</div>
+                    ${summaryHTML}
+                `;
+                
+                grid.appendChild(card);
+            }
         }
 
         // Update categorieën grid
@@ -579,15 +902,15 @@
                     <div class="category-info">
                         <div class="info-row">
                             <span class="info-label">Gegeten:</span>
-                            <span class="info-value">${current}g</span>
+                            <span class="info-value">${current}${goal.unit}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Maximaal:</span>
-                            <span class="info-value">${goal.max}g</span>
+                            <span class="info-value">${goal.max}${goal.unit}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Resterend:</span>
-                            <span class="info-value">${remaining}g</span>
+                            <span class="info-value">${remaining}${goal.unit}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Percentage:</span>
@@ -648,7 +971,8 @@
                             borderWidth: 1,
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.label}: ${context.parsed}g`;
+                                    const unit = GOALS[key].unit;
+                                    return `${context.label}: ${context.parsed}${unit}`;
                                 }
                             }
                         }
@@ -719,9 +1043,9 @@
                                     const key = Object.keys(GOALS)[context.dataIndex];
                                     const currentData = getData();
                                     const current = currentData[key] || 0;
-                                    const max = GOALS[key].max;
+                                    const goal = GOALS[key];
                                     const percentage = context.parsed;
-                                    return `${context.label}: ${current}g / ${max}g (${percentage}%)`;
+                                    return `${context.label}: ${current}${goal.unit} / ${goal.max}${goal.unit} (${percentage}%)`;
                                 }
                             }
                         }
