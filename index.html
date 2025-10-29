@@ -370,6 +370,173 @@
             font-size: 0.95em;
         }
 
+        .history-section {
+            background: rgba(28, 28, 30, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 25px;
+            border-top: 1px solid rgba(139, 101, 60, 0.3);
+            margin-top: 20px;
+        }
+
+        .history-section h2 {
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .history-category {
+            margin-bottom: 25px;
+            background: rgba(28, 28, 30, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 101, 60, 0.3);
+        }
+
+        .history-category h3 {
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: 500;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(139, 101, 60, 0.2);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border-left: 3px solid rgba(139, 101, 60, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            border-left-color: rgba(139, 101, 60, 0.8);
+        }
+
+        .history-item-name {
+            color: #ffffff;
+            font-weight: 400;
+            flex: 1;
+        }
+
+        .history-item-grams {
+            color: #4c7fba;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+
+        .delete-btn {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.4);
+            color: #e74c3c;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .delete-btn:hover {
+            background: rgba(231, 76, 60, 0.4);
+            border-color: rgba(231, 76, 60, 0.6);
+            transform: scale(1.1);
+        }
+
+        .delete-btn:active {
+            transform: scale(0.95);
+        }
+
+        .history-empty {
+            color: #8e8e93;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .red-meat-info {
+            background: rgba(28, 28, 30, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(139, 101, 60, 0.3);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .red-meat-info h3 {
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .red-meat-info .red-meat-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8e8e93;
+            font-size: 0.95em;
+        }
+
+        .red-meat-info .red-meat-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .red-meat-info.warning .red-meat-value {
+            color: #f39c12;
+        }
+
+        .red-meat-info.danger .red-meat-value {
+            color: #e74c3c;
+        }
+
+        .red-meat-progress {
+            width: 100%;
+            height: 8px;
+            background: #2c2c2e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .red-meat-progress-fill {
+            height: 100%;
+            background: #4c7fba;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .red-meat-progress-fill.warning {
+            background: #f39c12;
+        }
+
+        .red-meat-progress-fill.danger {
+            background: #e74c3c;
+        }
+
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -543,7 +710,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="category">Categorie:</label>
-                        <select id="category" required onchange="updateUnitLabel()">
+                        <select id="category" required onchange="updateUnitLabel(); toggleRedMeatCheckbox()">
                             <option value="">-- Selecteer --</option>
                             <option value="groente">Groente</option>
                             <option value="fruit">Fruit</option>
@@ -565,11 +732,22 @@
                         <input type="number" id="grams" min="1" placeholder="100" required>
                     </div>
                 </div>
+                <div class="form-group" id="redMeatGroup" style="display: none;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="isRedMeat" style="width: auto; cursor: pointer;">
+                        <span>Rood vlees (voor weeklimiet)</span>
+                    </label>
+                </div>
                 <button type="submit" class="add-btn">Toevoegen</button>
             </form>
         </div>
 
             <div class="categories-grid" id="categoriesGrid"></div>
+            
+            <div class="history-section">
+                <h2>Geschiedenis - Toegevoegde Producten</h2>
+                <div id="historyContent"></div>
+            </div>
         </div>
 
         <div id="overzicht" class="tab-content">
@@ -598,6 +776,12 @@
         <div id="week" class="tab-content">
             <div class="chart-section">
                 <h2>Weekoverzicht (Ma - Vr)</h2>
+                <div class="date-selector" style="margin-bottom: 25px;">
+                    <button class="date-nav-btn" onclick="changeWeek(-1)">‹</button>
+                    <div class="date-display" id="weekDisplay"></div>
+                    <button class="date-nav-btn" onclick="changeWeek(1)">›</button>
+                </div>
+                <div id="redMeatWeeklyInfo" class="red-meat-info"></div>
                 <div class="week-grid" id="weekGrid"></div>
             </div>
         </div>
@@ -617,18 +801,29 @@
             vocht: { name: 'Vocht', max: 2000, color: '#00bcd4', unit: 'ml' }
         };
 
+        // Weeklimiet voor rood vlees
+        const RED_MEAT_WEEKLY_LIMIT = 300; // gram per week
+
         let overviewChart = null;
         let categoryCharts = {};
-        let currentDate = null; // Formaat: YYYY-MM-DD
+        let currentDate = null; // Formaat: YYYY-MM-DD (voor Dagboek)
+        let overviewDate = null; // Formaat: YYYY-MM-DD (voor Overzicht)
+        let currentWeekMonday = null; // Date object: Maandag van de getoonde week
 
         // Initialiseer de app
         function init() {
             currentDate = getTodayDateString();
+            overviewDate = getTodayDateString(); // Begin met vandaag voor overzicht
             setupDatePicker();
             loadData();
+            // Stel huidige week maandag in o.b.v. huidige datum
+            currentWeekMonday = getMondayOfWeek(parseStringToDate(currentDate));
+            updateWeekDisplay();
+            updateOverviewDateDisplay();
             updateDisplay();
             updateOverviewTable();
             updateWeekOverview();
+            updateRedMeatWeeklyInfo();
         }
 
         // Switch tussen tabs
@@ -651,10 +846,13 @@
             
             // Update displays als nodig
             if (tabName === 'overzicht') {
+                updateOverviewDateDisplay();
                 updateOverviewTable();
                 updateChart();
             } else if (tabName === 'week') {
+                updateWeekDisplay();
                 updateWeekOverview();
+                updateRedMeatWeeklyInfo();
             }
         }
 
@@ -670,6 +868,20 @@
             } else {
                 label.textContent = 'Gram:';
                 input.placeholder = '100';
+            }
+        }
+
+        // Toggle rood vlees checkbox
+        function toggleRedMeatCheckbox() {
+            const category = document.getElementById('category').value;
+            const redMeatGroup = document.getElementById('redMeatGroup');
+            const isRedMeatCheckbox = document.getElementById('isRedMeat');
+            
+            if (category === 'vlees') {
+                redMeatGroup.style.display = 'block';
+            } else {
+                redMeatGroup.style.display = 'none';
+                isRedMeatCheckbox.checked = false;
             }
         }
 
@@ -707,6 +919,30 @@
             document.getElementById('dateDisplay').textContent = dateString;
         }
 
+        // Update overzicht datum display
+        function updateOverviewDateDisplay() {
+            if (!overviewDate) overviewDate = getTodayDateString();
+            const date = parseStringToDate(overviewDate);
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            const dateString = date.toLocaleDateString('nl-NL', options);
+            
+            const display = document.getElementById('overviewDateDisplay');
+            if (display) {
+                display.textContent = dateString;
+            }
+        }
+
+        // Verander overzicht dag met offset (-1 voor gisteren, +1 voor morgen)
+        function changeOverviewDay(offset) {
+            if (!overviewDate) overviewDate = getTodayDateString();
+            const date = parseStringToDate(overviewDate);
+            date.setDate(date.getDate() + offset);
+            overviewDate = formatDateToString(date);
+            updateOverviewDateDisplay();
+            updateOverviewTable();
+            updateChart();
+        }
+
         // Verander dag met offset (-1 voor gisteren, +1 voor morgen)
         function changeDay(offset) {
             const date = parseStringToDate(currentDate);
@@ -714,6 +950,13 @@
             currentDate = formatDateToString(date);
             updateDateDisplay();
             updateDisplay();
+            // Als de dag over weekgrens gaat, update week maandag en display
+            const newMonday = getMondayOfWeek(date);
+            if (!currentWeekMonday || newMonday.getTime() !== currentWeekMonday.getTime()) {
+                currentWeekMonday = newMonday;
+                updateWeekDisplay();
+                updateWeekOverview();
+            }
         }
 
 
@@ -731,18 +974,120 @@
             return saved ? JSON.parse(saved) : {};
         }
 
+        // Bepaal maandag van een gegeven datum
+        function getMondayOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay(); // 0 = zo, 1 = ma
+            const diff = day === 0 ? -6 : 1 - day; // Als zondag, ga 6 dagen terug
+            d.setDate(d.getDate() + diff);
+            d.setHours(0,0,0,0);
+            return d;
+        }
+
+        // Toon weekbereik (dd/mm – dd/mm)
+        function updateWeekDisplay() {
+            const weekLabel = document.getElementById('weekDisplay');
+            if (!weekLabel || !currentWeekMonday) return;
+            const monday = new Date(currentWeekMonday);
+            const friday = new Date(currentWeekMonday);
+            friday.setDate(monday.getDate() + 4);
+            const fmt = (d) => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
+            weekLabel.textContent = `${fmt(monday)} – ${fmt(friday)}`;
+        }
+
+        // Verander week met offset in weken (-1 vorige, +1 volgende)
+        function changeWeek(offsetWeeks) {
+            if (!currentWeekMonday) currentWeekMonday = getMondayOfWeek(parseStringToDate(currentDate));
+            currentWeekMonday.setDate(currentWeekMonday.getDate() + offsetWeeks * 7);
+            updateWeekDisplay();
+            updateWeekOverview();
+            updateRedMeatWeeklyInfo();
+        }
+
+        // Bereken totaal rood vlees voor de huidige week
+        function getWeeklyRedMeatTotal() {
+            if (!currentWeekMonday) return 0;
+            
+            const monday = new Date(currentWeekMonday);
+            let total = 0;
+            const allData = getAllData();
+            
+            // Loop door alle dagen van de week (ma-vr)
+            for (let i = 0; i < 5; i++) {
+                const date = new Date(monday);
+                date.setDate(monday.getDate() + i);
+                const dateString = formatDateToString(date);
+                const dayData = allData[dateString] || {};
+                const vleesHistory = dayData['vlees_history'] || [];
+                
+                // Tel alleen rood vlees op
+                vleesHistory.forEach(item => {
+                    if (item.isRedMeat) {
+                        total += item.grams || 0;
+                    }
+                });
+            }
+            
+            return total;
+        }
+
+        // Update rood vlees weekinfo weergave
+        function updateRedMeatWeeklyInfo() {
+            const redMeatInfo = document.getElementById('redMeatWeeklyInfo');
+            if (!redMeatInfo) return;
+            
+            const total = getWeeklyRedMeatTotal();
+            const percentage = (total / RED_MEAT_WEEKLY_LIMIT * 100);
+            
+            let infoClass = '';
+            let progressClass = '';
+            if (percentage > 100) {
+                infoClass = 'danger';
+                progressClass = 'danger';
+            } else if (percentage > 80) {
+                infoClass = 'warning';
+                progressClass = 'warning';
+            }
+            
+            redMeatInfo.className = `red-meat-info ${infoClass}`;
+            redMeatInfo.innerHTML = `
+                <h3>Rood Vlees - Weeklimiet</h3>
+                <div class="red-meat-stats">
+                    <span>Gegeten:</span>
+                    <span class="red-meat-value">${total}g / ${RED_MEAT_WEEKLY_LIMIT}g</span>
+                </div>
+                <div class="red-meat-progress">
+                    <div class="red-meat-progress-fill ${progressClass}" style="width: ${Math.min(percentage, 100)}%"></div>
+                </div>
+            `;
+        }
+
         // Haal data voor huidige datum op
         function getData() {
             const allData = getAllData();
             if (!allData[currentDate]) {
-                // Initialiseer met 0 voor alle categorieën
+                // Initialiseer met 0 voor alle categorieën en lege history arrays
                 const initialData = {};
                 Object.keys(GOALS).forEach(key => {
                     initialData[key] = 0;
+                    initialData[`${key}_history`] = [];
                 });
                 return initialData;
             }
-            return allData[currentDate];
+            // Zorg ervoor dat oude data ook history arrays heeft
+            const data = allData[currentDate];
+            Object.keys(GOALS).forEach(key => {
+                if (!data[`${key}_history`]) {
+                    data[`${key}_history`] = [];
+                }
+            });
+            return data;
+        }
+
+        // Haal geschiedenis op voor een categorie
+        function getHistory(category) {
+            const data = getData();
+            return data[`${category}_history`] || [];
         }
 
         // Sla data op voor huidige datum
@@ -757,17 +1102,36 @@
             event.preventDefault();
             
             const category = document.getElementById('category').value;
-            const productName = document.getElementById('productName').value;
+            const productName = document.getElementById('productName').value.trim();
             const grams = parseInt(document.getElementById('grams').value);
+            const isRedMeat = category === 'vlees' && document.getElementById('isRedMeat').checked;
 
             const data = getData();
             data[category] = (data[category] || 0) + grams;
+            
+            // Voeg product toe aan geschiedenis
+            if (!data[`${category}_history`]) {
+                data[`${category}_history`] = [];
+            }
+            const historyItem = {
+                name: productName,
+                grams: grams,
+                timestamp: new Date().toISOString(),
+                id: Date.now() + Math.random() // Unieke ID voor verwijdering
+            };
+            if (isRedMeat) {
+                historyItem.isRedMeat = true;
+            }
+            data[`${category}_history`].push(historyItem);
+            
             saveData(data);
 
             // Reset form
             document.getElementById('category').value = '';
             document.getElementById('productName').value = '';
             document.getElementById('grams').value = '';
+            document.getElementById('isRedMeat').checked = false;
+            document.getElementById('redMeatGroup').style.display = 'none';
 
             updateDisplay();
         }
@@ -785,11 +1149,36 @@
             updateChart();
             updateOverviewTable();
             updateWeekOverview();
+            updateHistory();
+            updateRedMeatWeeklyInfo();
+        }
+
+        // Haal data voor overzicht datum op
+        function getOverviewData() {
+            if (!overviewDate) overviewDate = getTodayDateString();
+            const allData = getAllData();
+            if (!allData[overviewDate]) {
+                // Initialiseer met 0 voor alle categorieën en lege history arrays
+                const initialData = {};
+                Object.keys(GOALS).forEach(key => {
+                    initialData[key] = 0;
+                    initialData[`${key}_history`] = [];
+                });
+                return initialData;
+            }
+            // Zorg ervoor dat oude data ook history arrays heeft
+            const data = allData[overviewDate];
+            Object.keys(GOALS).forEach(key => {
+                if (!data[`${key}_history`]) {
+                    data[`${key}_history`] = [];
+                }
+            });
+            return data;
         }
 
         // Update overzichtstabel
         function updateOverviewTable() {
-            const data = getData();
+            const data = getOverviewData();
             const tbody = document.getElementById('overviewTableBody');
             tbody.innerHTML = '';
 
@@ -823,13 +1212,8 @@
             const grid = document.getElementById('weekGrid');
             grid.innerHTML = '';
             
-            const today = new Date();
-            const dayOfWeek = today.getDay(); // 0 = zondag, 1 = maandag, etc.
-            
-            // Bereken maandag van deze week
-            const monday = new Date(today);
-            const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Als zondag, ga 6 dagen terug
-            monday.setDate(today.getDate() + diff);
+            // Gebruik huidige geselecteerde week (fallback naar week van vandaag)
+            const monday = currentWeekMonday ? new Date(currentWeekMonday) : getMondayOfWeek(new Date());
             
             // Toon ma t/m vr
             for (let i = 0; i < 5; i++) {
@@ -981,9 +1365,89 @@
             });
         }
 
+        // Verwijder een product uit de geschiedenis
+        function deleteHistoryItem(category, itemId) {
+            const allData = getAllData();
+            const data = allData[currentDate] || getData();
+            const history = data[`${category}_history`] || [];
+            
+            // Convert itemId to number if it's a number string
+            const itemIndex = history.findIndex(item => {
+                if (typeof item.id === 'number' && typeof itemId === 'string') {
+                    return item.id.toString() === itemId || item.id === parseFloat(itemId);
+                }
+                return item.id == itemId || item.id.toString() === itemId.toString();
+            });
+            
+            if (itemIndex === -1) return;
+            
+            const item = history[itemIndex];
+            // Pas total aan
+            data[category] = Math.max(0, (data[category] || 0) - item.grams);
+            
+            // Verwijder uit history
+            history.splice(itemIndex, 1);
+            data[`${category}_history`] = history;
+            
+            // Update in allData en sla op
+            allData[currentDate] = data;
+            localStorage.setItem('nutritionHistory', JSON.stringify(allData));
+            updateDisplay();
+        }
+
+        // Update geschiedenis weergave
+        function updateHistory() {
+            const historyContent = document.getElementById('historyContent');
+            historyContent.innerHTML = '';
+
+            let hasAnyHistory = false;
+            
+            Object.keys(GOALS).forEach(key => {
+                const history = getHistory(key);
+                if (history.length > 0) {
+                    hasAnyHistory = true;
+                    const goal = GOALS[key];
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'history-category';
+                    
+                    let historyHTML = '<div class="history-list">';
+                    history.forEach((item, index) => {
+                        // Geef item een ID als die nog niet bestaat (voor oude data)
+                        if (!item.id) {
+                            item.id = Date.now() + index + Math.random();
+                            // Sla de update op
+                            const data = getData();
+                            data[`${key}_history`] = history;
+                            saveData(data);
+                        }
+                        const itemIdEscaped = typeof item.id === 'string' ? item.id.replace(/'/g, "\\'") : item.id;
+                        historyHTML += `
+                            <div class="history-item">
+                                <span class="history-item-name">${item.name}</span>
+                                <span class="history-item-grams">${item.grams}${goal.unit}</span>
+                                <button class="delete-btn" onclick="deleteHistoryItem('${key}', '${itemIdEscaped}')" title="Verwijder">×</button>
+                            </div>
+                        `;
+                    });
+                    historyHTML += '</div>';
+                    
+                    categoryDiv.innerHTML = `
+                        <h3>${goal.name}</h3>
+                        ${historyHTML}
+                    `;
+                    
+                    historyContent.appendChild(categoryDiv);
+                }
+            });
+
+            if (!hasAnyHistory) {
+                historyContent.innerHTML = '<div class="history-empty">Nog geen producten toegevoegd voor deze datum.</div>';
+            }
+        }
+
         // Update Chart.js grafiek voor dagelijks overzicht
         function updateChart() {
-            const data = getData();
+            const data = getOverviewData();
             const labels = [];
             const values = [];
             const colors = [];
@@ -1041,7 +1505,7 @@
                             callbacks: {
                                 label: function(context) {
                                     const key = Object.keys(GOALS)[context.dataIndex];
-                                    const currentData = getData();
+                                    const currentData = getOverviewData();
                                     const current = currentData[key] || 0;
                                     const goal = GOALS[key];
                                     const percentage = context.parsed;
